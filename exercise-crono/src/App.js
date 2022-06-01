@@ -1,3 +1,7 @@
 export default function App() {
-  return <section>{/* Your code */}</section>;
+  return (
+    <section>
+      {/* Your code */}
+    </section>
+  );
 }
