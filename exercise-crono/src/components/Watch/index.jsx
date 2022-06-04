@@ -1,21 +1,35 @@
 import { useState, useEffect } from "react"
+import './styles.sass'
+
+
+const pad = (int) => {
+    return int.toString().padStart(2, '0');
+}
+
+const getTime = () => {
+    const date = new Date();
+    return {
+        hours: pad(date.getHours()),
+        minutes: pad(date.getMinutes()),
+        seconds: pad(date.getSeconds())
+    }
+}
 
 export default function Watch() {
+    const [time, setTime] = useState({
+        hours: "00",
+        minutes: "00",
+        seconds: "00"
+    })
 
-    const pad = (int) => {
-        return int.toString().padStart(2, '0');
-    }
+    useEffect(() => {
+        const id = setInterval(() => {
+            setTime(getTime())
+        }, 1000);
+        return () => clearInterval(id);
+    }, []);
 
-    const getDate = () => {
-        const date = new Date();
-        return {
-            hours: date.getHours(),
-            minutes: date.getMinutes(),
-            seconds: date.getSeconds()
-        }
-    }
-
-    const { hours, minutes, seconds } = getDate();
+    const { hours, minutes, seconds } = time;
 
     return (
         <section className="watch">

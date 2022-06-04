@@ -1,0 +1,23 @@
+$primary-text-color: white
+
+@mixin basic-flex($height, $width, $justify, $align)
+    display: flex
+    flex-wrap: wrap
+    height: $height
+    width: $width
+    justify-content: $justify
+    align-items: $align
+
+.watch
+    @include basic-flex(12rem, 30rem, center, center)
+    border: 1px solid rgba(256, 256, 256, 0.5)
+    border-radius: 0.3rem
+    box-shadow: -5px 5px 12px #cfd2d3, 5px -5px 12px #cfd2d3
+    flex-direction: column
+    color: $primary-text-color
+
+    &__subheading
+        margin-bottom: 1rem
+    
+.time
+    font-size: 2rem
