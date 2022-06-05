@@ -16,27 +16,15 @@ export default function Watch() {
     const [time, setTime] = useState(baseTime);
     const [isActive, setIsActive] = useState(false)
     const [isStopped, setIsStopped] = useState(false) 
+    const [stamps, setStamps] = useState([])
 
-    const getNextNumber = (int, padding, inc = 1) => {
-        const number = Number(int)
+    const getNextNumber = (str, padding, inc = 1) => {
+        const number = Number(str)
         const result = number + inc
         return pad(result, padding)
     }
 
-    const toggle = () => {
-        setIsActive(!isActive);
-    }
-
-    const stop = () => {
-        setIsActive(false);
-        setIsStopped(!isStopped)
-    }
-
-    const reset = () => {
-        setTime(baseTime);
-        setIsActive(false);
-    }
-
+    
     useEffect(() => {
         let interval = null;
         if (isActive) {
@@ -74,34 +62,59 @@ export default function Watch() {
                         hours,
                         minutes,
                         seconds,
-                        miliseconds: getNextNumber(miliseconds, 3, 10)
+                        miliseconds: getNextNumber(miliseconds, 3, 1)
                     });
                 }
-            }, 10)
+            }, 1)
         }
         if (!isActive) {
             clearInterval(interval)
         }
 
         return () => clearInterval(interval)
-    }, [isActive, time.miliseconds])
+    }, [isActive, time])
+
+
+    const stop = () => {
+        setIsActive(false);
+        setIsStopped(!isStopped)
+    };
+
+    const reset = () => {
+        setTime(baseTime);
+        setIsActive(false);
+        setIsStopped(false);
+        setStamps([])
+    };
 
     const handleClickStart = () => {
-        toggle()
-    }
+        setIsActive(!isActive)
+    };
 
     const handleClickStop = () => {
-        stop()
+        if(!isStopped) {
+            stop();
+            return;
+        }
+        reset()
+    };
+
+
+    const handleClickSplit = () => {
+        const newTime = time;
+        const newStamp = `${newTime.hours}:${newTime.minutes}:${newTime.seconds}:${newTime.miliseconds}`
+        setStamps(prev => [...prev, newStamp]);
     }
 
+    const isActiveFn = () => isActive ? "Pause" : "Start";
 
 
     const { hours, minutes, seconds, miliseconds } = time;
 
     return (
         <section className="watch">
-            <h1 className="watch__title">STOP the time</h1>
-            <h6 className="watch__subheading">...like Dio</h6>
+            <h1 className="watch__title">STOPWATCH</h1>
+            <h6 className="watch__subheading">🏳‍🌈 Happy Pride Month 🏳‍🌈</h6>
             <time className="time">
                 <span className="time__hours">{hours}</span>
                 :
@@ -112,10 +125,13 @@ export default function Watch() {
                 <span className="time__miliseconds">{miliseconds}</span>
             </time>
             <section className="watch__buttons">
-                {isStopped? '' : <button className="watch__buttons--start button" onClick={handleClickStart}>{isActive? "Pause" : "Start"}</button>}
-                <button className="watch__buttons--stop button" onClick={handleClickStop}>Stop</button>
-                {isStopped? '' : <button className="watch__buttons--split button">Split</button>}
+                {isStopped? '' : <button className="watch__buttons--start button" onClick={handleClickStart}>{isActiveFn()}</button>}
+                <button className="watch__buttons--stop button" onClick={handleClickStop}>{isStopped? "Restart" : "Stop"}</button>
+                {!isActive? '' : <button className="watch__buttons--split button" onClick={handleClickSplit}>Split</button>}
             </section>
+            <ul className="timeStamps">
+                {stamps.length? stamps.map(stamp => <li className="stamp">{stamp}</li>) : ''}
+            </ul>
         </section>
     )
 }

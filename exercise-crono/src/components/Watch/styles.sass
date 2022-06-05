@@ -3,7 +3,7 @@ $primary-text-color: white
 @mixin basic-flex($height, $width, $justify, $align)
     display: flex
     flex-wrap: wrap
-    height: $height
+    min-height: $height
     width: $width
     justify-content: $justify
     align-items: $align
@@ -15,7 +15,9 @@ $primary-text-color: white
     box-shadow: -5px 5px 12px #cfd2d3, 5px -5px 12px #cfd2d3
     flex-direction: column
     color: $primary-text-color
-
+    padding: 2rem 0
+    margin: 2rem 0
+    
     &__subheading
         margin-bottom: 1rem
     
